@@ -1,36 +1,36 @@
 # Pixel Meow 🐱
 
-Pixel Meow is a real-time collaborative pixel art canvas inspired by Reddit's r/place. Build using React, Vite, Firebase Auth, Supabase, and Docker!
+Pixel Meow est un canevas de pixel art collaboratif en temps réel inspiré par le "r/place" de Reddit. Construit avec React, Vite, Firebase Auth, Supabase et Docker !
 
-## Setup Instructions
+## Instructions d'Installation
 
-1. **Start the application with Docker**:
-We recommend running this via Docker Compose:
+1. **Démarrer l'application avec Docker** :
+Nous recommandons de lancer le projet via Docker Compose :
 ```bash
 docker-compose up --build
 ```
 
-2. **Supabase Setup**:
-Execute the `supabase/schema.sql` script in your Supabase project's SQL Editor to create the necessary tables, views, triggers, and Row Level Security (RLS) policies.
+2. **Configuration de Supabase** :
+Exécutez le script `supabase/schema.sql` dans l'éditeur SQL (SQL Editor) de votre projet Supabase pour créer les tables nécessaires, les vues, les déclencheurs (triggers) et la sécurité d'accès aux lignes (RLS).
 
-3. **Environment Variables**:
-Create a `.env` file at the root tracking the keys found in the source code.
+3. **Variables d'Environnement** :
+Créez un fichier `.env` à la racine contenant les clés trouvées dans le code source de l'application (Firebase et Supabase).
 
-## Git & GitHub Deployment
+## Git & Déploiement GitHub
 
-To push this project to GitHub using your Personal Access Token (PAT), run the following commands. Make sure to replace `<YOUR_GITHUB_USERNAME>` and `<YOUR_REPO_NAME>` with your actual target repository details.
+Pour envoyer ce projet sur GitHub en utilisant votre Personal Access Token (PAT), exécutez les commandes suivantes. Assurez-vous de remplacer `<VOTRE_PSEUDO>` et `<VOTRE_REPO>` par les informations de votre dépôt cible.
 
 ```bash
 git init
 git add .
-git commit -m "Initial commit for Pixel Meow"
+git commit -m "Initial commit pour Pixel Meow"
 git branch -M main
 
-# Using your PAT for authentication:
-git remote add origin https://<YOUR_GITHUB_TOKEN>@github.com/<YOUR_GITHUB_USERNAME>/<YOUR_REPO_NAME>.git
+# Utilisation de votre PAT pour l'authentification :
+git remote add origin https://<VOTRE_GITHUB_TOKEN>@github.com/<VOTRE_PSEUDO>/<VOTRE_REPO>.git
 
 git push -u origin main
 ```
 
-## Access
-Once the Docker container is running, access the app at `http://localhost:6278` (or `https://pixel.al1x0.fr`).
+## Accès
+Une fois le conteneur Docker en cours d'exécution, vous pouvez accéder à l'application via `http://localhost:6278` (ou `https://pixel.al1x0.fr`).
