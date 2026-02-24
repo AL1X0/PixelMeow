@@ -157,7 +157,7 @@ export const Canvas: React.FC<CanvasProps> = ({ pixels, lastPixel, onPlacePixel 
     return (
         <div
             ref={containerRef}
-            className={`w-full h-full overflow-hidden bg-gray-950 ${isDragging ? 'cursor-grabbing' : 'cursor-grab'} rounded-3xl shadow-inner relative`}
+            className={`w-full h-full overflow-hidden bg-gray-950 ${isDragging ? 'cursor-grabbing' : (hoverPixel ? 'cursor-none' : 'cursor-grab')} rounded-3xl shadow-inner relative`}
             onMouseDown={handleMouseDown}
             onMouseMove={handleMouseMove}
             onMouseUp={handleMouseUp}
