@@ -17,7 +17,7 @@ export const CooldownTimer: React.FC<{ cooldownEnd: number | null }> = ({ cooldo
         };
 
         updateTimer();
-        const interval = setInterval(updateTimer, 100); // Faster update for smoother feel
+        const interval = setInterval(updateTimer, 100);
         return () => clearInterval(interval);
     }, [cooldownEnd]);
 
@@ -25,13 +25,12 @@ export const CooldownTimer: React.FC<{ cooldownEnd: number | null }> = ({ cooldo
         <AnimatePresence>
             {timeLeft > 0 && (
                 <motion.div
-                    initial={{ y: -50, opacity: 0, scale: 0.9 }}
+                    initial={{ y: -20, opacity: 0, scale: 0.9 }}
                     animate={{ y: 0, opacity: 1, scale: 1 }}
-                    exit={{ y: -20, opacity: 0, scale: 0.9 }}
-                    className="fixed top-8 right-8 z-50"
+                    exit={{ y: -10, opacity: 0, scale: 0.9 }}
+                    className="relative"
                 >
                     <div className="relative group">
-                        {/* Glow effect */}
                         <div className="absolute -inset-1 bg-gradient-to-r from-red-600 to-orange-600 rounded-2xl blur opacity-20 group-hover:opacity-40 transition duration-500" />
 
                         <div className="relative bg-red-950/40 backdrop-blur-2xl border border-red-500/30 text-white px-6 py-4 rounded-[1.5rem] flex items-center gap-4 shadow-2xl">
@@ -53,7 +52,7 @@ export const CooldownTimer: React.FC<{ cooldownEnd: number | null }> = ({ cooldo
                             </div>
 
                             <div className="flex flex-col">
-                                <span className="text-[10px] font-black text-red-400 uppercase tracking-[0.2em]">Chargement</span>
+                                <span className="text-[10px] font-black text-red-300 uppercase tracking-[0.2em]">Chargement</span>
                                 <span className="text-xl font-black tabular-nums tracking-tight">
                                     {timeLeft}<span className="text-sm ml-0.5 opacity-50">s</span>
                                 </span>

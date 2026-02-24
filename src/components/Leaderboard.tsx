@@ -53,7 +53,7 @@ export const Leaderboard: React.FC = () => {
                 </div>
                 <div className="flex items-center gap-1.5 px-3 py-1 bg-white/5 rounded-full border border-white/5">
                     <Users className="w-3.5 h-3.5 text-blue-400" />
-                    <span className="text-[10px] font-bold text-gray-400 uppercase tracking-tighter">Live</span>
+                    <span className="text-[10px] font-bold text-gray-300 uppercase tracking-tighter">Live</span>
                 </div>
             </div>
 
@@ -77,7 +77,7 @@ export const Leaderboard: React.FC = () => {
                                 <span className={`flex-shrink-0 w-6 h-6 rounded-lg flex items-center justify-center font-black text-xs ${idx === 0 ? 'bg-yellow-500 text-black' :
                                         idx === 1 ? 'bg-gray-400 text-black' :
                                             idx === 2 ? 'bg-orange-400 text-black' :
-                                                'text-gray-500 bg-white/5'
+                                                'text-gray-400 bg-white/5'
                                     }`}>
                                     {idx + 1}
                                 </span>
@@ -102,9 +102,9 @@ export const Leaderboard: React.FC = () => {
                         className="py-10 text-center"
                     >
                         <div className="w-12 h-12 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-3">
-                            <Users className="w-6 h-6 text-gray-700" />
+                            <Users className="w-6 h-6 text-gray-500" />
                         </div>
-                        <p className="text-gray-500 text-sm font-bold lowercase tracking-tight">En attente de créateurs...</p>
+                        <p className="text-gray-300 text-sm font-bold lowercase tracking-tight">En attente de créateurs...</p>
                     </motion.div>
                 )}
             </div>

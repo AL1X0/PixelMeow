@@ -56,7 +56,7 @@ function App() {
             <div className="flex flex-col items-center max-w-sm w-full p-8 text-center">
               <Rocket className="w-12 h-12 text-blue-500 mb-6 animate-bounce" />
               <h2 className="text-2xl font-black text-white mb-2">Chargement du Canevas</h2>
-              <p className="text-gray-500 text-sm mb-8">Nous récupérons les {pixels.size || '...'} pixels déjà posés par la communauté.</p>
+              <p className="text-gray-400 text-sm mb-8">Nous récupérons les {pixels.size || '...'} pixels déjà posés par la communauté.</p>
               <div className="w-full bg-white/5 h-1.5 rounded-full overflow-hidden">
                 <motion.div
                   className="h-full bg-gradient-to-r from-blue-500 to-purple-500"
@@ -99,13 +99,13 @@ function App() {
             >
               <div className="glass-panel px-5 py-3 rounded-2xl flex items-center gap-3">
                 <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse shadow-[0_0_10px_rgba(34,197,94,0.5)]" />
-                <span className="text-xs font-black text-gray-400 uppercase tracking-widest">{user.displayName || 'Creator'}</span>
-                <ShieldCheck className="w-4 h-4 text-blue-400 opacity-50" />
+                <span className="text-xs font-black text-white uppercase tracking-widest">{user.displayName || 'Creator'}</span>
+                <ShieldCheck className="w-4 h-4 text-blue-400 opacity-80" />
               </div>
 
               <button
                 onClick={logout}
-                className="glass-panel p-3.5 rounded-2xl text-gray-500 hover:text-red-400 hover:bg-red-500/10 hover:border-red-500/30 transition-all active:scale-90 group"
+                className="glass-panel p-3.5 rounded-2xl text-gray-300 hover:text-red-400 hover:bg-red-500/10 hover:border-red-500/30 transition-all active:scale-90 group"
                 title="Déconnexion"
               >
                 <LogOut className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />

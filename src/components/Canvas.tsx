@@ -124,7 +124,7 @@ export const Canvas: React.FC<CanvasProps> = ({ pixels, lastPixel, onPlacePixel 
     return (
         <div
             ref={containerRef}
-            className={`w-full h-full overflow-hidden bg-[#030712] ${isDragging ? 'cursor-grabbing' : (hoverPixel ? 'cursor-none' : 'cursor-grab')} rounded-[3rem] p-4 relative`}
+            className={`w-full h-full overflow-hidden bg-[#030712] ${isDragging ? 'cursor-grabbing' : (hoverPixel ? 'cursor-none' : 'cursor-grab')} relative`}
             onMouseDown={handleMouseDown}
             onMouseMove={handleMouseMove}
             onMouseUp={handleMouseUp}
@@ -179,7 +179,7 @@ export const Canvas: React.FC<CanvasProps> = ({ pixels, lastPixel, onPlacePixel 
                     >
                         <div className="flex items-center gap-2 mb-1">
                             <div className="w-1.5 h-1.5 bg-blue-500 rounded-full" />
-                            <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest leading-none">Coordonnées</span>
+                            <span className="text-[10px] font-black text-gray-200 uppercase tracking-widest leading-none">Coordonnées</span>
                         </div>
                         <span className="text-white font-black text-lg tracking-tight leading-none mb-2">
                             {hoverPixel.x}, {hoverPixel.y}
@@ -188,13 +188,13 @@ export const Canvas: React.FC<CanvasProps> = ({ pixels, lastPixel, onPlacePixel 
                         <div className="pt-2 border-t border-white/5">
                             {pixels.has(`${hoverPixel.x},${hoverPixel.y}`) ? (
                                 <div className="flex flex-col">
-                                    <span className="text-[10px] font-bold text-gray-500 uppercase tracking-tighter mb-1">Créateur</span>
+                                    <span className="text-[10px] font-bold text-gray-300 uppercase tracking-tighter mb-1">Créateur</span>
                                     <span className="text-blue-400 font-black truncate max-w-[140px] text-sm">
                                         {pixels.get(`${hoverPixel.x},${hoverPixel.y}`)?.user_name}
                                     </span>
                                 </div>
                             ) : (
-                                <span className="text-gray-500 font-bold italic text-xs">Canevas vierge</span>
+                                <span className="text-gray-400 font-bold italic text-xs">Canevas vierge</span>
                             )}
                         </div>
                     </motion.div>
@@ -205,7 +205,7 @@ export const Canvas: React.FC<CanvasProps> = ({ pixels, lastPixel, onPlacePixel 
             <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="absolute bottom-10 left-1/2 -translate-x-1/2 glass-panel px-6 py-2 rounded-full text-[10px] font-black text-gray-500 uppercase tracking-[0.3em] backdrop-blur-md border-white/5 pointer-events-none"
+                className="absolute bottom-10 left-1/2 -translate-x-1/2 glass-panel px-6 py-2 rounded-full text-[10px] font-black text-white/70 uppercase tracking-[0.3em] backdrop-blur-md border-white/5 pointer-events-none"
             >
                 Zoom {Math.round(scale * 100)}% <span className="mx-2 opacity-20">|</span> Molette pour zoomer
             </motion.div>
