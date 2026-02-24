@@ -28,7 +28,7 @@ export const Leaderboard: React.FC = () => {
     }, []);
 
     return (
-        <div className="bg-gray-900/80 backdrop-blur-xl rounded-2xl p-5 w-64 shadow-2xl border border-gray-700/50">
+        <div className="bg-gray-900/80 backdrop-blur-xl rounded-2xl p-5 w-72 shadow-2xl border border-gray-700/50">
             <div className="flex items-center gap-3 mb-4 pb-3 border-b border-gray-700/50">
                 <div className="p-2 bg-yellow-500/10 rounded-lg">
                     <Trophy className="w-5 h-5 text-yellow-400" />
@@ -40,7 +40,7 @@ export const Leaderboard: React.FC = () => {
             <div className="space-y-3">
                 {leaders.map((l, idx) => (
                     <div key={idx} className="flex justify-between items-center group">
-                        <span className="text-gray-300 font-medium truncate max-w-[120px] text-sm group-hover:text-white transition-colors">
+                        <span className="text-gray-300 font-medium truncate max-w-[170px] text-sm group-hover:text-white transition-colors">
                             <span className="text-gray-500 mr-2">{idx + 1}.</span>
                             {l.user_name}
                         </span>
