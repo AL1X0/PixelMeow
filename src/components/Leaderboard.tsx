@@ -22,9 +22,20 @@ export const Leaderboard: React.FC = () => {
 
         fetchLeaderboard();
 
-        // Polling leaderboard every 30 seconds
+        // Subscribe to NEW pixels to refresh leaderboard instantly
+        const channel = supabase.channel('leaderboard-updates')
+            .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'pixels' }, () => {
+                fetchLeaderboard();
+            })
+            .subscribe();
+
+        // Polling leaderboard every 30 seconds as fallback
         const interval = setInterval(fetchLeaderboard, 30000);
-        return () => clearInterval(interval);
+
+        return () => {
+            supabase.removeChannel(channel);
+            clearInterval(interval);
+        };
     }, []);
 
     return (
