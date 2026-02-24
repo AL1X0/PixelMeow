@@ -14,6 +14,7 @@ export function usePixelSync(user: { uid: string, displayName: string | null } |
 
     // Store full PixelData instead of just colored strings to support hover info
     const [pixels, setPixels] = useState<Map<string, PixelData>>(new Map());
+    const [lastPixel, setLastPixel] = useState<PixelData | null>(null);
     const [cooldownEnd, setCooldownEnd] = useState<number | null>(null);
     const [loading, setLoading] = useState(true);
 
@@ -42,6 +43,7 @@ export function usePixelSync(user: { uid: string, displayName: string | null } |
         const channel = supabase.channel('public:pixels')
             .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'pixels' }, (payload) => {
                 const newPixel = payload.new as PixelData;
+                setLastPixel(newPixel);
                 setPixels(prev => {
                     const updated = new Map(prev);
                     updated.set(`${newPixel.x},${newPixel.y}`, newPixel);
@@ -82,10 +84,11 @@ export function usePixelSync(user: { uid: string, displayName: string | null } |
         if (!userId) return false;
         if (cooldownEnd && Date.now() < cooldownEnd) return false;
 
-        // Optimistic update
+        const newPixelData = { x, y, color, user_name: userName };
+        setLastPixel(newPixelData);
         setPixels(prev => {
             const updated = new Map(prev);
-            updated.set(`${x},${y}`, { x, y, color, user_name: userName });
+            updated.set(`${x},${y}`, newPixelData);
             return updated;
         });
 
@@ -105,5 +108,5 @@ export function usePixelSync(user: { uid: string, displayName: string | null } |
         return true;
     }, [userId, cooldownEnd]);
 
-    return { pixels, loading, placePixel, cooldownEnd };
+    return { pixels, loading, placePixel, cooldownEnd, lastPixel };
 }

@@ -4,10 +4,11 @@ import type { PixelData } from '../hooks/usePixelSync';
 
 interface CanvasProps {
     pixels: Map<string, PixelData>;
+    lastPixel: PixelData | null;
     onPlacePixel: (x: number, y: number) => void;
 }
 
-export const Canvas: React.FC<CanvasProps> = ({ pixels, onPlacePixel }) => {
+export const Canvas: React.FC<CanvasProps> = ({ pixels, lastPixel, onPlacePixel }) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
 
@@ -60,26 +61,34 @@ export const Canvas: React.FC<CanvasProps> = ({ pixels, onPlacePixel }) => {
                 y: clientHeight / 2 - targetY * initialScale
             });
         }
-    }, []); // Only run once on mount (pixels are fetched before Canvas renders)
+    }, [containerRef]); // Run once on mount (refs should be ready)
 
+    // INITIAL FULL DRAW
     useEffect(() => {
-        const canvas = canvasRef.current;
-        if (!canvas) return;
-        const ctx = canvas.getContext('2d');
+        if (!canvasRef.current || pixels.size === 0) return;
+        const ctx = canvasRef.current.getContext('2d');
         if (!ctx) return;
 
-        // Fast rendering: full background
+        // Reset and draw background
         ctx.fillStyle = '#FFFFFF';
         ctx.fillRect(0, 0, 500, 500);
 
-        // Draw all active pixels
-        pixels.forEach((pixelData, key) => {
-            const [x, y] = key.split(',').map(Number);
+        // Batch draw everyone
+        pixels.forEach((pixelData) => {
             ctx.fillStyle = pixelData.color;
-            ctx.fillRect(x, y, 1, 1);
+            ctx.fillRect(pixelData.x, pixelData.y, 1, 1);
         });
+    }, [pixels.size === 0]); // Trigger only when data first arrives or reset
 
-    }, [pixels]);
+    // INCREMENTAL DRAW (The optimization)
+    useEffect(() => {
+        if (!canvasRef.current || !lastPixel) return;
+        const ctx = canvasRef.current.getContext('2d');
+        if (!ctx) return;
+
+        ctx.fillStyle = lastPixel.color;
+        ctx.fillRect(lastPixel.x, lastPixel.y, 1, 1);
+    }, [lastPixel]);
 
     const handleMouseDown = (e: MouseEvent) => {
         setIsDragging(true);

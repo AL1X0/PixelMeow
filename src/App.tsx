@@ -10,7 +10,7 @@ import { LogOut } from 'lucide-react';
 
 function App() {
   const { user, loading: authLoading, logout } = useAuth();
-  const { pixels, loading: pixelsLoading, placePixel, cooldownEnd } = usePixelSync(user);
+  const { pixels, loading: pixelsLoading, placePixel, cooldownEnd, lastPixel } = usePixelSync(user);
   const [selectedColor, setSelectedColor] = useState('#E50000');
 
   if (authLoading) {
@@ -40,7 +40,7 @@ function App() {
             Loading canvas...
           </div>
         ) : (
-          <Canvas pixels={pixels} onPlacePixel={handlePlacePixel} />
+          <Canvas pixels={pixels} lastPixel={lastPixel} onPlacePixel={handlePlacePixel} />
         )}
       </div>
 
