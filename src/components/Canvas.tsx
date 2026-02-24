@@ -205,7 +205,7 @@ export const Canvas: React.FC<CanvasProps> = ({ pixels, lastPixel, onPlacePixel 
             <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="absolute bottom-10 left-1/2 -translate-x-1/2 glass-panel px-6 py-2 rounded-full text-[10px] font-black text-white/70 uppercase tracking-[0.3em] backdrop-blur-md border-white/5 pointer-events-none"
+                className="absolute bottom-32 left-1/2 -translate-x-1/2 glass-panel px-6 py-2 rounded-full text-[10px] font-black text-white/70 uppercase tracking-[0.3em] backdrop-blur-md border-white/5 pointer-events-none"
             >
                 Zoom {Math.round(scale * 100)}% <span className="mx-2 opacity-20">|</span> Molette pour zoomer
             </motion.div>
