@@ -192,7 +192,7 @@ export const Canvas: React.FC<CanvasProps> = ({ pixels, onPlacePixel }) => {
                 <div
                     className="absolute pointer-events-none bg-gray-900/90 text-white text-xs px-3 py-2 rounded-xl shadow-xl backdrop-blur-md border border-gray-700/50 flex flex-col gap-1 transition-opacity z-50"
                     style={{
-                        left: Math.min(offset.x + (hoverPixel.x * scale) + 15, containerRef.current?.clientWidth! - 150),
+                        left: Math.min(offset.x + (hoverPixel.x * scale) + 15, containerRef.current?.clientWidth! - 200),
                         top: Math.min(offset.y + (hoverPixel.y * scale) + 15, containerRef.current?.clientHeight! - 60)
                     }}
                 >
