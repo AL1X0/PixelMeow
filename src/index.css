@@ -34,8 +34,23 @@
 
     &::before {
       content: '';
-      @apply absolute inset-0 rounded-2xl border border-transparent bg-gradient-to-r from-blue-500 to-purple-500 [mask-composite:exclude] [mask:linear-gradient(#fff_0_0)_padding-box, linear-gradient(#fff_0_0)];
+      @apply absolute inset-0 rounded-2xl border border-transparent;
+      background: linear-gradient(to right, #3b82f6, #a855f7);
+      -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+      mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: destination-out;
+      mask-composite: exclude;
       opacity: 0.2;
     }
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%) skewX(-15deg);
+  }
+
+  100% {
+    transform: translateX(200%) skewX(-15deg);
   }
 }
