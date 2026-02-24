@@ -177,7 +177,7 @@ export const Canvas: React.FC<CanvasProps> = ({ pixels, lastPixel, onPlacePixel 
                     ref={canvasRef}
                     width={500}
                     height={500}
-                    className="shadow-[0_0_50px_rgba(255,255,255,0.05)] border border-gray-800"
+                    className="shadow-[0_0_50px_rgba(255,255,255,0.05)] ring-1 ring-gray-800"
                     style={{ imageRendering: 'pixelated' }}
                 />
 
