@@ -9,6 +9,9 @@ CREATE TABLE IF NOT EXISTS pixels (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 
+-- Assurez-vous que la colonne user_name existe même si la table a été créée avant la mise à jour
+ALTER TABLE pixels ADD COLUMN IF NOT EXISTS user_name VARCHAR NOT NULL DEFAULT 'Anonymous';
+
 -- Index for fast retrieval
 CREATE INDEX IF NOT EXISTS pixels_xy_idx ON pixels(x, y);
 
