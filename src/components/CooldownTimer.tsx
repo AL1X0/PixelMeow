@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Timer } from 'lucide-react';
+import { Timer, Zap } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export const CooldownTimer: React.FC<{ cooldownEnd: number | null }> = ({ cooldownEnd }) => {
     const [timeLeft, setTimeLeft] = useState(0);
@@ -16,16 +17,51 @@ export const CooldownTimer: React.FC<{ cooldownEnd: number | null }> = ({ cooldo
         };
 
         updateTimer();
-        const interval = setInterval(updateTimer, 1000);
+        const interval = setInterval(updateTimer, 100); // Faster update for smoother feel
         return () => clearInterval(interval);
     }, [cooldownEnd]);
 
-    if (timeLeft === 0) return null;
-
     return (
-        <div className="fixed top-6 right-6 bg-red-600 border border-red-500 text-white px-5 py-3 rounded-2xl shadow-[0_0_20px_rgba(239,68,68,0.5)] flex items-center gap-3 animate-pulse backdrop-blur-md z-50">
-            <Timer className="w-5 h-5" />
-            <span className="font-extrabold tracking-wide">Cooldown: {timeLeft}s</span>
-        </div>
+        <AnimatePresence>
+            {timeLeft > 0 && (
+                <motion.div
+                    initial={{ y: -50, opacity: 0, scale: 0.9 }}
+                    animate={{ y: 0, opacity: 1, scale: 1 }}
+                    exit={{ y: -20, opacity: 0, scale: 0.9 }}
+                    className="fixed top-8 right-8 z-50"
+                >
+                    <div className="relative group">
+                        {/* Glow effect */}
+                        <div className="absolute -inset-1 bg-gradient-to-r from-red-600 to-orange-600 rounded-2xl blur opacity-20 group-hover:opacity-40 transition duration-500" />
+
+                        <div className="relative bg-red-950/40 backdrop-blur-2xl border border-red-500/30 text-white px-6 py-4 rounded-[1.5rem] flex items-center gap-4 shadow-2xl">
+                            <div className="relative">
+                                <motion.div
+                                    animate={{ rotate: 360 }}
+                                    transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                                    className="p-2 bg-red-500/20 rounded-xl"
+                                >
+                                    <Timer className="w-5 h-5 text-red-500" />
+                                </motion.div>
+                                <motion.div
+                                    initial={{ scale: 0 }}
+                                    animate={{ scale: [0, 1.2, 1] }}
+                                    className="absolute -top-1 -right-1"
+                                >
+                                    <Zap className="w-3 h-3 text-yellow-400 fill-yellow-400" />
+                                </motion.div>
+                            </div>
+
+                            <div className="flex flex-col">
+                                <span className="text-[10px] font-black text-red-400 uppercase tracking-[0.2em]">Chargement</span>
+                                <span className="text-xl font-black tabular-nums tracking-tight">
+                                    {timeLeft}<span className="text-sm ml-0.5 opacity-50">s</span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </motion.div>
+            )}
+        </AnimatePresence>
     );
 };

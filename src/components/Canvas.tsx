@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState, type MouseEvent } from 'react';
-
+import { motion, AnimatePresence } from 'framer-motion';
 import type { PixelData } from '../hooks/usePixelSync';
 
 interface CanvasProps {
@@ -23,16 +23,13 @@ export const Canvas: React.FC<CanvasProps> = ({ pixels, lastPixel, onPlacePixel 
     const [hoverPixel, setHoverPixel] = useState<{ x: number, y: number } | null>(null);
 
     useEffect(() => {
-        // Center canvas on the most dense area on first load
         if (containerRef.current) {
             const { clientWidth, clientHeight } = containerRef.current;
-
             let targetX = 250;
             let targetY = 250;
             let initialScale = 1;
 
             if (pixels.size > 0) {
-                // Divide the canvas into a 10x10 grid (50x50 chunks) to find the highest density
                 const densities = new Map<string, number>();
                 let maxDensity = 0;
                 let bestCell = '5,5';
@@ -42,7 +39,6 @@ export const Canvas: React.FC<CanvasProps> = ({ pixels, lastPixel, onPlacePixel 
                     const cellKey = `${Math.floor(x / 50)},${Math.floor(y / 50)}`;
                     const newDensity = (densities.get(cellKey) || 0) + 1;
                     densities.set(cellKey, newDensity);
-
                     if (newDensity > maxDensity) {
                         maxDensity = newDensity;
                         bestCell = cellKey;
@@ -50,9 +46,9 @@ export const Canvas: React.FC<CanvasProps> = ({ pixels, lastPixel, onPlacePixel 
                 });
 
                 const [cx, cy] = bestCell.split(',').map(Number);
-                targetX = cx * 50 + 25; // center of the dense cell
+                targetX = cx * 50 + 25;
                 targetY = cy * 50 + 25;
-                initialScale = 4; // Zoom in level
+                initialScale = 4;
             }
 
             setScale(initialScale);
@@ -61,31 +57,24 @@ export const Canvas: React.FC<CanvasProps> = ({ pixels, lastPixel, onPlacePixel 
                 y: clientHeight / 2 - targetY * initialScale
             });
         }
-    }, [containerRef]); // Run once on mount (refs should be ready)
+    }, [containerRef]);
 
-    // INITIAL FULL DRAW
     useEffect(() => {
         if (!canvasRef.current || pixels.size === 0) return;
         const ctx = canvasRef.current.getContext('2d');
         if (!ctx) return;
-
-        // Reset and draw background
         ctx.fillStyle = '#FFFFFF';
         ctx.fillRect(0, 0, 500, 500);
-
-        // Batch draw everyone
         pixels.forEach((pixelData) => {
             ctx.fillStyle = pixelData.color;
             ctx.fillRect(pixelData.x, pixelData.y, 1, 1);
         });
-    }, [pixels.size === 0]); // Trigger only when data first arrives or reset
+    }, [pixels.size === 0]);
 
-    // INCREMENTAL DRAW (The optimization)
     useEffect(() => {
         if (!canvasRef.current || !lastPixel) return;
         const ctx = canvasRef.current.getContext('2d');
         if (!ctx) return;
-
         ctx.fillStyle = lastPixel.color;
         ctx.fillRect(lastPixel.x, lastPixel.y, 1, 1);
     }, [lastPixel]);
@@ -98,26 +87,15 @@ export const Canvas: React.FC<CanvasProps> = ({ pixels, lastPixel, onPlacePixel 
 
     const handleMouseMove = (e: MouseEvent) => {
         if (!canvasRef.current) return;
-
-        // Handle dragging
         if (isDragging) {
             setHasDragged(true);
-            setOffset({
-                x: e.clientX - dragStart.x,
-                y: e.clientY - dragStart.y
-            });
+            setOffset({ x: e.clientX - dragStart.x, y: e.clientY - dragStart.y });
             setHoverPixel(null);
             return;
         }
-
-        // Handle hover calculation for the black border box 
         const rect = canvasRef.current.getBoundingClientRect();
-        const rawX = e.clientX - rect.left;
-        const rawY = e.clientY - rect.top;
-
-        const x = Math.floor(rawX / scale);
-        const y = Math.floor(rawY / scale);
-
+        const x = Math.floor((e.clientX - rect.left) / scale);
+        const y = Math.floor((e.clientY - rect.top) / scale);
         if (x >= 0 && x < 500 && y >= 0 && y < 500) {
             setHoverPixel({ x, y });
         } else {
@@ -127,15 +105,10 @@ export const Canvas: React.FC<CanvasProps> = ({ pixels, lastPixel, onPlacePixel 
 
     const handleMouseUp = (e: MouseEvent) => {
         setIsDragging(false);
-
         if (!hasDragged && canvasRef.current) {
             const rect = canvasRef.current.getBoundingClientRect();
-            const rawX = e.clientX - rect.left;
-            const rawY = e.clientY - rect.top;
-
-            const x = Math.floor(rawX / scale);
-            const y = Math.floor(rawY / scale);
-
+            const x = Math.floor((e.clientX - rect.left) / scale);
+            const y = Math.floor((e.clientY - rect.top) / scale);
             if (x >= 0 && x < 500 && y >= 0 && y < 500) {
                 onPlacePixel(x, y);
             }
@@ -143,21 +116,15 @@ export const Canvas: React.FC<CanvasProps> = ({ pixels, lastPixel, onPlacePixel 
     };
 
     const handleWheel = (e: React.WheelEvent) => {
-        // Custom zoom on wheel to keep things in view
         const zoomIntensity = 0.2;
-        const newScale = e.deltaY > 0
-            ? Math.max(0.5, scale - zoomIntensity)
-            : Math.min(25, scale + zoomIntensity);
-
-        // We would need robust calculations to zoom towards mouse pos
-        // But for simplicity, we zoom relative to the top left of the wrapper
+        const newScale = e.deltaY > 0 ? Math.max(0.5, scale - zoomIntensity) : Math.min(25, scale + zoomIntensity);
         setScale(newScale);
     };
 
     return (
         <div
             ref={containerRef}
-            className={`w-full h-full overflow-hidden bg-gray-950 ${isDragging ? 'cursor-grabbing' : (hoverPixel ? 'cursor-none' : 'cursor-grab')} rounded-3xl shadow-inner relative`}
+            className={`w-full h-full overflow-hidden bg-[#030712] ${isDragging ? 'cursor-grabbing' : (hoverPixel ? 'cursor-none' : 'cursor-grab')} rounded-[3rem] p-4 relative`}
             onMouseDown={handleMouseDown}
             onMouseMove={handleMouseMove}
             onMouseUp={handleMouseUp}
@@ -165,63 +132,83 @@ export const Canvas: React.FC<CanvasProps> = ({ pixels, lastPixel, onPlacePixel 
             onWheel={handleWheel}
             style={{ touchAction: 'none' }}
         >
-            <div
+            <motion.div
                 className="absolute"
-                style={{
-                    transform: `translate(${offset.x}px, ${offset.y}px) scale(${scale})`,
-                    transformOrigin: '0 0',
-                    transition: isDragging ? 'none' : 'transform 0.05s linear'
-                }}
+                animate={{ x: offset.x, y: offset.y, scale }}
+                transition={{ type: "spring", stiffness: 400, damping: 40, mass: 1 }}
+                style={{ transformOrigin: '0 0' }}
             >
-                <canvas
-                    ref={canvasRef}
-                    width={500}
-                    height={500}
-                    className="shadow-[0_0_50px_rgba(255,255,255,0.05)] ring-1 ring-gray-800"
-                    style={{ imageRendering: 'pixelated' }}
-                />
-
-                {/* Hover Selection Box outline */}
-                {hoverPixel && !isDragging && (
-                    <div
-                        className="absolute pointer-events-none z-10"
-                        style={{
-                            left: hoverPixel.x,
-                            top: hoverPixel.y,
-                            width: 1,
-                            height: 1,
-                            boxShadow: `0 0 0 ${1 / scale}px black, 0 0 0 ${2 / scale}px white`
-                        }}
+                <div className="relative">
+                    <canvas
+                        ref={canvasRef}
+                        width={500}
+                        height={500}
+                        className="shadow-[0_0_100px_rgba(0,209,255,0.05)] ring-1 ring-white/10"
+                        style={{ imageRendering: 'pixelated' }}
                     />
-                )}
-            </div>
 
-            {/* Hover Data Overlay */}
-            {hoverPixel && !isDragging && (
-                <div
-                    className="absolute pointer-events-none bg-gray-900/90 text-white text-xs px-3 py-2 rounded-xl shadow-xl backdrop-blur-md border border-gray-700/50 flex flex-col gap-1 transition-opacity z-50"
-                    style={{
-                        left: Math.min(offset.x + (hoverPixel.x * scale) + 15, containerRef.current?.clientWidth! - 200),
-                        top: Math.min(offset.y + (hoverPixel.y * scale) + 15, containerRef.current?.clientHeight! - 60)
-                    }}
-                >
-                    <span className="font-bold text-gray-300">
-                        Pixel ({hoverPixel.x}, {hoverPixel.y})
-                    </span>
-                    {pixels.has(`${hoverPixel.x},${hoverPixel.y}`) ? (
-                        <span className="text-blue-400 font-medium break-all">
-                            Posé par : {pixels.get(`${hoverPixel.x},${hoverPixel.y}`)?.user_name}
-                        </span>
-                    ) : (
-                        <span className="text-gray-500 italic">Vide</span>
+                    {/* Hover Selection Box */}
+                    {hoverPixel && !isDragging && (
+                        <motion.div
+                            initial={false}
+                            animate={{ left: hoverPixel.x, top: hoverPixel.y }}
+                            transition={{ type: "spring", stiffness: 1000, damping: 50 }}
+                            className="absolute pointer-events-none z-10"
+                            style={{
+                                width: 1,
+                                height: 1,
+                                boxShadow: `0 0 0 ${1 / scale}px black, 0 0 0 ${2 / scale}px white`
+                            }}
+                        />
                     )}
                 </div>
-            )}
+            </motion.div>
 
-            {/* Zoom hint */}
-            <div className="absolute bottom-4 right-4 bg-gray-900/80 px-4 py-2 rounded-xl text-xs text-gray-400 backdrop-blur-md pointer-events-none">
-                Zoom: {Math.round(scale * 100)}% | Scroll to zoom, Drag to pan
-            </div>
+            {/* Hover Tooltip */}
+            <AnimatePresence>
+                {hoverPixel && !isDragging && (
+                    <motion.div
+                        initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: 5, scale: 0.95 }}
+                        className="absolute pointer-events-none z-50 glass-panel px-4 py-3 rounded-2xl flex flex-col gap-1 shadow-2xl"
+                        style={{
+                            left: Math.min(offset.x + (hoverPixel.x * scale) + 20, (containerRef.current?.clientWidth || 0) - 200),
+                            top: Math.min(offset.y + (hoverPixel.y * scale) + 20, (containerRef.current?.clientHeight || 0) - 80)
+                        }}
+                    >
+                        <div className="flex items-center gap-2 mb-1">
+                            <div className="w-1.5 h-1.5 bg-blue-500 rounded-full" />
+                            <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest leading-none">Coordonnées</span>
+                        </div>
+                        <span className="text-white font-black text-lg tracking-tight leading-none mb-2">
+                            {hoverPixel.x}, {hoverPixel.y}
+                        </span>
+
+                        <div className="pt-2 border-t border-white/5">
+                            {pixels.has(`${hoverPixel.x},${hoverPixel.y}`) ? (
+                                <div className="flex flex-col">
+                                    <span className="text-[10px] font-bold text-gray-500 uppercase tracking-tighter mb-1">Créateur</span>
+                                    <span className="text-blue-400 font-black truncate max-w-[140px] text-sm">
+                                        {pixels.get(`${hoverPixel.x},${hoverPixel.y}`)?.user_name}
+                                    </span>
+                                </div>
+                            ) : (
+                                <span className="text-gray-500 font-bold italic text-xs">Canevas vierge</span>
+                            )}
+                        </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
+            {/* Scale indicator */}
+            <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="absolute bottom-10 left-1/2 -translate-x-1/2 glass-panel px-6 py-2 rounded-full text-[10px] font-black text-gray-500 uppercase tracking-[0.3em] backdrop-blur-md border-white/5 pointer-events-none"
+            >
+                Zoom {Math.round(scale * 100)}% <span className="mx-2 opacity-20">|</span> Molette pour zoomer
+            </motion.div>
         </div>
     );
 };

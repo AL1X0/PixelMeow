@@ -1,7 +1,41 @@
 @import "tailwindcss";
 
 @layer base {
+  :root {
+    --glass-bg: rgba(17, 24, 39, 0.7);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --neon-blue: #00D1FF;
+    --neon-purple: #A855F7;
+  }
+
   body {
-    @apply bg-gray-900 text-gray-100 antialiased overflow-hidden select-none m-0 p-0;
+    @apply bg-[#030712] text-gray-100 antialiased overflow-hidden select-none m-0 p-0 font-['Outfit'];
+    background-image:
+      radial-gradient(at 0% 0%, rgba(0, 209, 255, 0.05) 0px, transparent 50%),
+      radial-gradient(at 100% 100%, rgba(168, 85, 247, 0.05) 0px, transparent 50%);
+  }
+}
+
+@layer components {
+  .glass-panel {
+    @apply bg-gray-900/60 backdrop-blur-xl border border-white/10 shadow-2xl;
+  }
+
+  .text-glow {
+    text-shadow: 0 0 10px rgba(0, 209, 255, 0.5);
+  }
+
+  .btn-premium {
+    @apply relative px-6 py-3 rounded-xl font-bold transition-all duration-300 overflow-hidden bg-white/5 border border-white/10 hover:border-blue-500/50 hover:bg-blue-500/10 active:scale-95;
+  }
+
+  .neon-border {
+    @apply relative overflow-hidden rounded-2xl;
+
+    &::before {
+      content: '';
+      @apply absolute inset-0 rounded-2xl border border-transparent bg-gradient-to-r from-blue-500 to-purple-500 [mask-composite:exclude] [mask:linear-gradient(#fff_0_0)_padding-box, linear-gradient(#fff_0_0)];
+      opacity: 0.2;
+    }
   }
 }
