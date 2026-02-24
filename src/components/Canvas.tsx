@@ -116,9 +116,27 @@ export const Canvas: React.FC<CanvasProps> = ({ pixels, lastPixel, onPlacePixel 
     };
 
     const handleWheel = (e: React.WheelEvent) => {
-        const zoomIntensity = 0.2;
-        const newScale = e.deltaY > 0 ? Math.max(0.5, scale - zoomIntensity) : Math.min(25, scale + zoomIntensity);
+        if (!containerRef.current) return;
+
+        const zoomSpeed = 0.15;
+        const delta = e.deltaY > 0 ? -zoomSpeed : zoomSpeed;
+        const newScale = Math.max(0.2, Math.min(25, scale * (1 + delta)));
+
+        // Get mouse position relative to container
+        const rect = containerRef.current.getBoundingClientRect();
+        const mouseX = e.clientX - rect.left;
+        const mouseY = e.clientY - rect.top;
+
+        // Calculate the world coordinates (on canvas) under the mouse before zoom
+        const worldX = (mouseX - offset.x) / scale;
+        const worldY = (mouseY - offset.y) / scale;
+
+        // Calculate the new offset to keep the same world point under the mouse
+        const newOffsetX = mouseX - worldX * newScale;
+        const newOffsetY = mouseY - worldY * newScale;
+
         setScale(newScale);
+        setOffset({ x: newOffsetX, y: newOffsetY });
     };
 
     return (
